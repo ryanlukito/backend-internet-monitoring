@@ -5,26 +5,22 @@ import time
 
 app = FastAPI()
 
-# ✅ Allow frontend access (CORS)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # or ["https://your-frontend-domain.vercel.app"]
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ✅ Simple ping route for latency measurement
 @app.get("/ping")
 async def ping():
     return {"message": "pong"}
 
-# ✅ Upload test endpoint
 @app.post("/upload_test")
 async def upload_test(request: Request):
     await request.body()  # actually read the uploaded blob
     return {"status": "ok"}
 
-# ✅ Receive and log client test results
 @app.post("/client_result")
 async def receive_client_result(request: Request):
     data = await request.json()
