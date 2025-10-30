@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import os, platform, re, speedtest, asyncio
 
@@ -33,13 +33,8 @@ async def get_ping():
     latency = parse_latency(response)
     return {"latency": latency or None}
 
-@app.get("/speed")
-async def get_speed():
-    st = speedtest.Speedtest()
-    st.get_best_server()
-    download = st.download() / 1_000_000
-    upload = st.upload() / 1_000_000
-    return {
-        "download": round(download, 2),
-        "upload": round(upload, 2)
-    }
+@app.post("/client_result")
+async def receive_client_result(request: Request):
+    data = await request.json()
+    print("Client:", data)
+    return {"status": "ok"}
